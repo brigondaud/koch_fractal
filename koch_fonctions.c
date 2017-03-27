@@ -15,14 +15,14 @@ struct list *calcul_coordonnees(struct list *a, struct list *e)
     struct list *d = malloc(sizeof(struct list));
 
     /* Calcul des coordonnees */
-    b->x = a->x + abs(((int32_t)e->x -(int32_t)a->x)/3);
-    b->y = a->y + abs(((int32_t)e->y -(int32_t)a->y)/3);
+    b->x = (uint32_t)((int32_t)a->x + ((int32_t)e->x -(int32_t)a->x)/3);
+    b->y = a->y + ((int32_t)e->y -(int32_t)a->y)/3;
 
-    d->x = a->x + abs((2*((int32_t)e->x -(int32_t)a->x))/3);
-    d->y = a->y + abs((2*((int32_t)e->y -(int32_t)a->y))/3);
+    d->x = (uint32_t)((int32_t)a->x + (2*((int32_t)e->x -(int32_t)a->x))/3);
+    d->y = (uint32_t)((int32_t)a->y + (2*((int32_t)e->y -(int32_t)a->y))/3);
 
-    c->x = (b->x + d->x)/2 - abs(((int32_t)d->y - (int32_t)b->y))*sqrt(3)/2;
-    c->y = (b->y + d->y)/2 + abs(((int32_t)d->x - (int32_t)b->x))*sqrt(3)/2;
+    c->x = (uint32_t)(((int32_t)(b->x + d->x)/2) - ((int32_t)d->y - (int32_t)b->y)*sqrt(3)/2);
+    c->y = (uint32_t)(((int32_t)(b->y + d->y)/2) + ((int32_t)d->x - (int32_t)b->x)*sqrt(3)/2);
 
     b->next = c;
     c->next = d;
@@ -59,14 +59,14 @@ void init_koch(struct list **koch, uint32_t size, uint32_t segment_length)
     struct list *b = malloc(sizeof(struct list));
     struct list *c = malloc(sizeof(struct list));
 
-    a->y = segment_length + (size - segment_length)/2;
     a->x = (size - segment_length)/2;
+    a->y = (size - segment_length)/2;
 
-    c->x = a->x + segment_length/2;
-    c->y = a->x - segment_length*(uint32_t)(sqrt(3)/2);
+    b->x = a->x + segment_length/2;
+    b->y = a->y + segment_length*(sqrt(3)/2);
 
-    b->x = a->x + segment_length;
-    b->y = a->y;
+    c->x = a->x + segment_length;
+    c->y = a->y;
 
     a->next = b;
     b->next = c;
@@ -111,19 +111,17 @@ void generer_koch(struct list *koch, uint32_t nb_iterations)
     a = koch;
     e = koch->next;
     for (uint32_t i = 0; i < nb_iterations; i++) {
+        while (e) {
             /* Calcul des coordonées et insertion dans la fractale */
             b = calcul_coordonnees(a, e);
-            printf("------b------\n");
-            afficher(b);
             /* Insertion du triangle partant de b dans la fractale */
             a->next = b;
             /* b->next->next->next = d->next*/
-            b->next->next->next = e;
+            b->next->next->next= e;
             /* On change les points pour l'iteration suivante */
             a = e;
             e = e->next;
-            printf("-------------------\n");
-            afficher(koch);
+        }
     }
 }
 
@@ -213,14 +211,15 @@ void test_triangle_simple(void)
     uint32_t *pic = NULL;
     struct list *triangle = malloc(sizeof(struct list));
     uint32_t size = 500;
-    uint32_t segment = 100;
+    uint32_t segment = 150;
     /* Init triangle */
     init_koch(&triangle, size, segment);
     /* Blanc sur noir. */
     uint32_t bg_color = 0xFFFFFF, fg_color = 0xFF0000;
     init_picture(&pic, size, bg_color);
     render_image_bresenham(pic, triangle, size, bg_color, fg_color);
-    create_image_ppm(pic, size, size, "triangle.ppm");
+    afficher(triangle);
+    create_image_ppm(pic, size, size, "init.ppm");
     free(pic);
 }
 
@@ -230,7 +229,7 @@ void test_iteration_simple(void)
     uint32_t *pic = NULL;
     struct list *koch = malloc(sizeof(struct list));
     uint32_t size = 500;
-    uint32_t segment = 100;
+    uint32_t segment = 150;
     /* Une itération */
     init_koch(&koch, size, segment);
     generer_koch(koch, 1);
