@@ -98,7 +98,7 @@ void test_init(void)
 void init_picture(uint32_t **picture, uint32_t size, uint32_t bg_color)
 {
     *picture = malloc(size*size*sizeof(uint32_t));
-    for (uint32_t i = 0; i < size*size; i++) {
+    for (uint32_t i = 0, SIZE = size*size; i < SIZE; i++) {
         (*picture)[i] = bg_color;
     }
 }
@@ -114,7 +114,6 @@ void generer_koch(struct list *koch, uint32_t nb_iterations)
    simplifiee */
 void render_image_bresenham(uint32_t *picture, struct list *koch, uint32_t size, uint32_t bg_color, uint32_t fg_color)
 {
-    init_picture(&picture, size, bg_color);
     struct list *premiere, *precedente, *courante;
     /* On suppose que la liste passée en paramètre est forcément initalisée
      * donc possède au moins trois points
@@ -184,9 +183,12 @@ void test_diag(void)
     diag->y = size;
     diag->next = NULL;
     /* Blanc sur noir. */
-    uint32_t bg_color = 0, fg_color = 4294967295;
+    uint32_t bg_color = 0, fg_color = 0xFFFFFF;
+    init_picture(&pic, size, bg_color);
+    init_koch();
     render_image_bresenham(pic, diag, size, bg_color, fg_color);
     create_image_ppm(pic, size, size, "diag.ppm");
+    free(pic);
 }
 
 /* Liberation de la memoire allouee a la liste chainee */

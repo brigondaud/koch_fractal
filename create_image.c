@@ -12,6 +12,7 @@ void create_image_ppm(uint32_t *pic, int32_t size_x, int32_t size_y, char *filen
     image = fopen(filename, "r");
     if (image) { /* Si l'image existe déjà. */
         printf("Le fichier existe déjà\n", stderr);
+        fclose(image);
         exit(1);
     } else {
         image = fopen(filename, "w");
@@ -21,11 +22,10 @@ void create_image_ppm(uint32_t *pic, int32_t size_x, int32_t size_y, char *filen
 
         /* Ecriture en binaire de l'image. */
         write_picture(pic, image, size_x, size_y);
+
+        /* Fermeture du fichier. */
+        fclose(image);
     }
-
-    /* Fermeture du fichier. */
-    fclose(image);
-
 }
 
 void write_header(uint32_t *pic, FILE *fichier, int32_t size_x, int32_t size_y)
