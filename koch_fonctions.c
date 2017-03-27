@@ -225,6 +225,24 @@ void test_triangle_simple(void)
     free(pic);
 }
 
+void test_iteration_simple(void)
+{
+    /* Test sur une iteration. */
+    uint32_t *pic = NULL;
+    struct list *koch = malloc(sizeof(struct list));
+    uint32_t size = 500;
+    uint32_t segment = 200;
+    /* Une itération */
+    generer_koch(koch, 1);
+    init_koch(&koch, size, segment);
+    /* Blanc sur noir. */
+    uint32_t bg_color = 0xFFFFFF, fg_color = 0xFF0000;
+    init_picture(&pic, size, bg_color);
+    render_image_bresenham(pic, koch, size, bg_color, fg_color);
+    create_image_ppm(pic, size, size, "koch.ppm");
+    free(pic);
+}
+
 /* Liberation de la memoire allouee a la liste chainee */
 void free_koch(struct list *koch)
 {
