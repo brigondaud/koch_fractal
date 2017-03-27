@@ -85,4 +85,7 @@ extern void ligne_bresenham(uint32_t *picture, uint32_t fg_color, uint32_t size,
 /* Test céation d'une diagonale. */
 extern void test_diag(void);
 
+/* Test triangle simple */
+extern void test_triangle_simple(void);
+
 #endif

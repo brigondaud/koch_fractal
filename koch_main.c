@@ -15,7 +15,8 @@ int main(int argc, char **argv)
     // test_coordonnees();
     // test_init();
     // test_image();
-    test_diag();
+    // test_diag();
+    test_triangle_simple();
 
 
     return EXIT_SUCCESS;

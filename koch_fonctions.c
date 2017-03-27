@@ -166,7 +166,6 @@ void ligne_bresenham(uint32_t *picture, uint32_t fg_color, uint32_t size, struct
             y0 += sy;
         }
     }
-
 }
 
 void test_diag(void)
@@ -183,11 +182,28 @@ void test_diag(void)
     diag_fin->x = size;
     diag_fin->y = size;
     diag_fin->next = NULL;
-    /* Blanc sur noir. */
+    /* Rouge sur blanc. */
     uint32_t bg_color = 0xFFFFFF, fg_color = 0xFF0000;
     init_picture(&pic, size, bg_color);
     render_image_bresenham(pic, diag, size, bg_color, fg_color);
     create_image_ppm(pic, size, size, "diag.ppm");
+    free(pic);
+}
+
+void test_triangle_simple(void)
+{
+    /* Rendu et creation d'une image contenant un triangle */
+    uint32_t *pic = NULL;
+    struct list *triangle = malloc(sizeof(struct list));
+    uint32_t size = 500;
+    uint32_t segment = 100;
+    /* Init triangle */
+    init_koch(&triangle, size, segment);
+    /* Blanc sur noir. */
+    uint32_t bg_color = 0xFFFFFF, fg_color = 0xFF0000;
+    init_picture(&pic, size, bg_color);
+    render_image_bresenham(pic, triangle, size, bg_color, fg_color);
+    create_image_ppm(pic, size, size, "triangle.ppm");
     free(pic);
 }
 
