@@ -110,7 +110,22 @@ void init_picture(uint32_t **picture, uint32_t size, uint32_t bg_color)
    generation de la liste chainee koch correspondante */
 void generer_koch(struct list *koch, uint32_t nb_iterations)
 {
-    // TODO
+    struct list *a, *b, *e;
+    a = koch;
+    e = koch->next;
+    for (uint32_t i = 0; i < nb_iterations; i++) {
+        while (e) {
+            /* Calcul des coordonées et insertion dans la fractale */
+            b = calcul_coordonnees(a, e);
+            /* Insertion du triangle partant de b dans la fractale */
+            a->next = b;
+            /* b->next->next->next = d->next*/
+            b->next->next->next = e;
+            /* On change les points pour l'iteration suivante */
+            a = e;
+            e = e->next;
+        }
+    }
 }
 
 /* Rendu image via algorithme bresehem - version generalisee
