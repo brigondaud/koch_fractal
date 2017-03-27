@@ -5,6 +5,7 @@
 
 #include "koch_fonctions.h"
 #include "create_image.h"
+#define sin60 0,866025404
 
 /* Calcul des coordonees des points du triangle pour une iteration*/
 struct list *calcul_coordonnees(struct list *a, struct list *e)
@@ -59,13 +60,13 @@ void init_koch(struct list **koch, uint32_t size, uint32_t segment_length)
     struct list *b = malloc(sizeof(struct list));
     struct list *c = malloc(sizeof(struct list));
 
-    a->y = (uint32_t)((float)(segment_length/2))*sqrt(3)/2;
-    a->x = (uint32_t)((int32_t)size - (int32_t)segment_length) / 2;
+    a->y = segment_length + (size - segment_length)/2;
+    a->x = (size - segment_length)/2;
 
     b->x = a->x + segment_length/2;
-    b->y = (uint32_t)((int32_t)size-(int32_t)(((float)(segment_length/2))*sqrt(3)/2));
+    b->y = a->x - sin60*segment_length;
 
-    c->x = (uint32_t)((int32_t)size-((int32_t)size-(int)segment_length)/2);
+    c->x = a->x + segment_length;
     c->y = a->y;
 
     a->next = b;
@@ -73,7 +74,9 @@ void init_koch(struct list **koch, uint32_t size, uint32_t segment_length)
     c->next = NULL;
 
     *koch = a;
+
 }
+
 
 void afficher(struct list *l)
 {
@@ -196,7 +199,7 @@ void test_triangle_simple(void)
     uint32_t *pic = NULL;
     struct list *triangle = malloc(sizeof(struct list));
     uint32_t size = 500;
-    uint32_t segment = 100;
+    uint32_t segment = 200;
     /* Init triangle */
     init_koch(&triangle, size, segment);
     /* Blanc sur noir. */
