@@ -138,8 +138,8 @@ void ligne_bresenham(uint32_t *picture, uint32_t fg_color, uint32_t size, struct
     y0 = a->y;
     x1 = b->x;
     y1 = b->y;
-    uint32_t dx = (uint32_t)abs((int32_t)x1 - (int32_t)x0);
-    uint32_t dy = (uint32_t)abs((int32_t)y1 - (int32_t)y0);
+    int32_t dx = abs((int32_t)x1 - (int32_t)x0);
+    int32_t dy = abs((int32_t)y1 - (int32_t)y0);
     int32_t sx, sy, err, e2;
     if (x0 < x1) {
         sx = 1;
@@ -151,18 +151,19 @@ void ligne_bresenham(uint32_t *picture, uint32_t fg_color, uint32_t size, struct
     } else {
         sy = -1;
     }
+    /* TODO: ternaires !*/
     err = (int32_t)dx - (int32_t)dy;
-
-    while (x0 != x1 && y0 != y1) {
+    while (true) {
         picture[y0*size + x0] = fg_color;
+        if (x0 == x1 && y0 == y1) { break; }
         e2 = 2*err;
         if (e2 > -dy) {
             err -= dy;
-            x0 = (uint32_t)((int32_t)x0 + sx);
+            x0 += sx;
         }
         if (e2 < dx) {
             err += dx;
-            y0 = (uint32_t)((int32_t)y0 + sy);
+            y0 += sy;
         }
     }
 
@@ -179,13 +180,12 @@ void test_diag(void)
     diag->x = 0;
     diag->y = 0;
     diag->next = diag_fin;
-    diag->x = size;
-    diag->y = size;
-    diag->next = NULL;
+    diag_fin->x = size;
+    diag_fin->y = size;
+    diag_fin->next = NULL;
     /* Blanc sur noir. */
-    uint32_t bg_color = 0, fg_color = 0xFFFFFF;
+    uint32_t bg_color = 0xFFFFFF, fg_color = 0xFF0000;
     init_picture(&pic, size, bg_color);
-    init_koch();
     render_image_bresenham(pic, diag, size, bg_color, fg_color);
     create_image_ppm(pic, size, size, "diag.ppm");
     free(pic);
