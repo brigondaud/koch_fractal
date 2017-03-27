@@ -108,9 +108,9 @@ void init_picture(uint32_t **picture, uint32_t size, uint32_t bg_color)
 void generer_koch(struct list *koch, uint32_t nb_iterations)
 {
     struct list *a, *b, *e;
-    a = koch;
-    e = koch->next;
     for (uint32_t i = 0; i < nb_iterations; i++) {
+        a = koch;
+        e = koch->next;
         while (e) {
             /* Calcul des coordonées et insertion dans la fractale */
             b = calcul_coordonnees(a, e);
@@ -227,17 +227,16 @@ void test_triangle_simple(void)
     free(pic);
 }
 
-void test_iteration_simple(void)
+void test_iteration(void)
 {
-    /* Test sur une iteration. */
+    /* Test sur desi terations "manuelles" */
     uint32_t *pic = NULL;
     struct list *koch = malloc(sizeof(struct list));
-    uint32_t size = 500;
-    uint32_t segment = 150;
-    /* Une itération */
+    uint32_t size = 1000;
+    uint32_t segment = 500;
     init_koch(&koch, size, segment);
-    generer_koch(koch, 1);
-    /* Blanc sur noir. */
+    generer_koch(koch, 4);
+    /* rouge sur blanc. */
     uint32_t bg_color = 0xFFFFFF, fg_color = 0xFF0000;
     init_picture(&pic, size, bg_color);
     render_image_bresenham(pic, koch, size, bg_color, fg_color);

@@ -88,7 +88,7 @@ extern void test_diag(void);
 /* Test triangle simple */
 extern void test_triangle_simple(void);
 
-/* Test sur une iteration. */
-extern void test_iteration_simple(void);
+/* Test sur plusieurs iterations manuelles */
+extern void test_iteration(void);
 
 #endif
