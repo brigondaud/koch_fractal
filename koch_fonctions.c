@@ -122,6 +122,10 @@ void generer_koch(struct list *koch, uint32_t nb_iterations)
             a = e;
             e = e->next;
         }
+        /* TODO: liste chainee*/
+        /* Sur le dernier segment (liste non chainee) */
+        b = calcul_coordonnees(a, koch);
+        a->next = b;
     }
 }
 
