@@ -16,19 +16,19 @@ struct list *calcul_coordonnees(struct list *a, struct list *e)
     struct list *d = malloc(sizeof(struct list));
 
     /* Calcul des coordonnees */
-    b->x = a->x + (uint32_t) ((int32_t)e->x -(int32_t)a->x)/3;
-    b->y = a->y + (uint32_t) ((int32_t)e->y -(int32_t)a->y)/3;
+    b->x = a->x + abs(((int32_t)e->x -(int32_t)a->x)/3);
+    b->y = a->y + abs(((int32_t)e->y -(int32_t)a->y)/3);
 
-    d->x = a->x + (uint32_t) floor(((float)2*((int32_t)e->x -(int32_t)a->x))/3);
-    d->y = a->y + (uint32_t) floor(((float)2*((int32_t)e->y -(int32_t)a->y))/3);
+    d->x = a->x + abs((2*((int32_t)e->x -(int32_t)a->x))/3);
+    d->y = a->y + abs((2*((int32_t)e->y -(int32_t)a->y))/3);
 
-    c->x = (uint32_t)((float)((b->x + d->x))/2 - (float)(((int32_t)d->y - (int32_t)b->y))*(sqrt(3)/2));
-    c->y = (uint32_t)((float)((b->y + d->y))/2 + (float)(((int32_t)d->x - (int32_t)b->x))*(sqrt(3)/2));
+    c->x = (b->x + d->x)/2 - abs(((int32_t)d->y - (int32_t)b->y))*sin60;
+    c->y = (b->y + d->y)/2 + abs(((int32_t)d->x - (int32_t)b->x))*sin60;
 
     b->next = c;
     c->next = d;
     d->next = NULL;
-
+    
     return b;
 }
 
@@ -233,8 +233,8 @@ void test_iteration_simple(void)
     uint32_t size = 500;
     uint32_t segment = 200;
     /* Une itération */
-    generer_koch(koch, 1);
     init_koch(&koch, size, segment);
+    generer_koch(koch, 1);
     /* Blanc sur noir. */
     uint32_t bg_color = 0xFFFFFF, fg_color = 0xFF0000;
     init_picture(&pic, size, bg_color);
