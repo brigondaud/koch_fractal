@@ -5,7 +5,6 @@
 
 #include "koch_fonctions.h"
 #include "create_image.h"
-#define sin60 0,866025404
 
 /* Calcul des coordonees des points du triangle pour une iteration*/
 struct list *calcul_coordonnees(struct list *a, struct list *e)
@@ -22,13 +21,13 @@ struct list *calcul_coordonnees(struct list *a, struct list *e)
     d->x = a->x + abs((2*((int32_t)e->x -(int32_t)a->x))/3);
     d->y = a->y + abs((2*((int32_t)e->y -(int32_t)a->y))/3);
 
-    c->x = (b->x + d->x)/2 - abs(((int32_t)d->y - (int32_t)b->y))*sin60;
-    c->y = (b->y + d->y)/2 + abs(((int32_t)d->x - (int32_t)b->x))*sin60;
+    c->x = (b->x + d->x)/2 - abs(((int32_t)d->y - (int32_t)b->y))*sqrt(3)/2;
+    c->y = (b->y + d->y)/2 + abs(((int32_t)d->x - (int32_t)b->x))*sqrt(3)/2;
 
     b->next = c;
     c->next = d;
     d->next = NULL;
-    
+
     return b;
 }
 
@@ -63,20 +62,18 @@ void init_koch(struct list **koch, uint32_t size, uint32_t segment_length)
     a->y = segment_length + (size - segment_length)/2;
     a->x = (size - segment_length)/2;
 
-    b->x = a->x + segment_length/2;
-    b->y = a->x - sin60*segment_length;
+    c->x = a->x + segment_length/2;
+    c->y = a->x - segment_length*(uint32_t)(sqrt(3)/2);
 
-    c->x = a->x + segment_length;
-    c->y = a->y;
+    b->x = a->x + segment_length;
+    b->y = a->y;
 
     a->next = b;
     b->next = c;
     c->next = NULL;
 
     *koch = a;
-
 }
-
 
 void afficher(struct list *l)
 {
@@ -114,9 +111,10 @@ void generer_koch(struct list *koch, uint32_t nb_iterations)
     a = koch;
     e = koch->next;
     for (uint32_t i = 0; i < nb_iterations; i++) {
-        while (e) {
             /* Calcul des coordonées et insertion dans la fractale */
             b = calcul_coordonnees(a, e);
+            printf("------b------\n");
+            afficher(b);
             /* Insertion du triangle partant de b dans la fractale */
             a->next = b;
             /* b->next->next->next = d->next*/
@@ -124,7 +122,8 @@ void generer_koch(struct list *koch, uint32_t nb_iterations)
             /* On change les points pour l'iteration suivante */
             a = e;
             e = e->next;
-        }
+            printf("-------------------\n");
+            afficher(koch);
     }
 }
 
@@ -214,7 +213,7 @@ void test_triangle_simple(void)
     uint32_t *pic = NULL;
     struct list *triangle = malloc(sizeof(struct list));
     uint32_t size = 500;
-    uint32_t segment = 200;
+    uint32_t segment = 100;
     /* Init triangle */
     init_koch(&triangle, size, segment);
     /* Blanc sur noir. */
@@ -231,7 +230,7 @@ void test_iteration_simple(void)
     uint32_t *pic = NULL;
     struct list *koch = malloc(sizeof(struct list));
     uint32_t size = 500;
-    uint32_t segment = 200;
+    uint32_t segment = 100;
     /* Une itération */
     init_koch(&koch, size, segment);
     generer_koch(koch, 1);
