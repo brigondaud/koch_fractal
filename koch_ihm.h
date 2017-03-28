@@ -20,4 +20,7 @@ extern void show_koch_list(struct list *koch);
 /* Affichage de controle des differents parametres de la fractale */
 extern void show_parameters(const struct parameters *parameters);
 
+/* Test parametres */
+extern void test_params(int argc, char *argv[]);
+
 #endif

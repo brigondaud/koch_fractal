@@ -9,14 +9,24 @@
 void init_parameters(struct parameters *parameters, int argc, char *argv[])
 {
     /* Initialisation des paramètres et mode interactif */
-    if (argc >= 6) { /* Tous les paramètres avec ou sans all */
+    if (argc == 6 | argc == 7) { /* Tous les paramètres avec ou sans all */
 
-        /* segment_length et calcul image_size */
-        segment_length = atoi(argv[1]);
-        
+        parameters->segment_length = atoi(argv[1]);
+        /* Calcul de image_size */
+        parameters->image_size = 5*(parameters->segment_length/3);
 
-        if (argc == 7) { /* all_images */
+        parameters->nb_iterations = atoi(argv[2]);
+        parameters->fg_color = strtol(argv[3], NULL, 16);
+        parameters->bg_color = strtol(argv[4], NULL, 16);
 
+        /* Nom du fichier de sorti */
+        parameters->outfile = calloc(255, sizeof(char));
+        sprintf(parameters->outfile, "%s", argv[5]);
+
+        parameters->all_images = false;
+
+        if (argc == 7 && argv[6][0] == 'a' && argv[6][1] == 'l' && argv[6][2] == 'l') { /* all_images */
+            parameters->all_images = true;
         }
 
     } else { /* Mode interactif */
@@ -35,11 +45,11 @@ void show_parameters(const struct parameters *parameters)
     /* Composantes des couleurs */
         /* fg_color */
     uint8_t fr = parameters->fg_color>>16,
-        fv = parameters->fg_color>>8,
-        fb = parameters->fg_color;
+            fv = parameters->fg_color>>8,
+            fb = parameters->fg_color;
     uint8_t br = parameters->bg_color>>16,
-        bv = parameters->bg_color>>8,
-        bb = parameters->bg_color;
+            bv = parameters->bg_color>>8,
+            bb = parameters->bg_color;
 
     printf("-----------Parameters-----------\n");
     printf("Segment length: %u\n", parameters->segment_length);
@@ -50,4 +60,12 @@ void show_parameters(const struct parameters *parameters)
     printf("All images: %u\n", parameters->all_images);
     printf("%s\n", parameters->outfile);
     printf("--------------------------------\n");
+}
+
+void test_params(int argc, char *argv[])
+{
+    struct parameters *params = malloc(sizeof(struct parameters));
+    init_parameters(params, argc, argv);
+    show_parameters(params);
+    free(params);
 }

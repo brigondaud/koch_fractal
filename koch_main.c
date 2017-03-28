@@ -17,7 +17,8 @@ int main(int argc, char **argv)
     // test_image();
     // test_diag();
     // test_triangle_simple();
-    test_iteration();
+    // test_iteration();
+    test_params(argc, argv);
 
 
     return EXIT_SUCCESS;
