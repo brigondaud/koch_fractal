@@ -31,6 +31,42 @@ void init_parameters(struct parameters *parameters, int argc, char *argv[])
 
     } else { /* Mode interactif */
 
+        /* TODO: vider le buffer d'entrée si entrée trop longue */
+        char input[255];
+
+        /* Segment length */
+        printf("segment length: \n");
+        fgets(input, 255, stdin);
+        parameters->segment_length = atoi(input);
+
+        /* Calcul de image_size */
+        parameters->image_size = 5*(parameters->segment_length/3);
+
+        /* Iterations */
+        printf("Iterations: \n");
+        fgets(input, 255, stdin);
+        parameters->nb_iterations = atoi(input);
+
+        /* Iterations */
+        printf("Foreground color: \n");
+        fgets(input, 255, stdin);
+        parameters->fg_color = strtol(input, NULL, 16);
+
+        /* Iterations */
+        printf("Background color: \n");
+        fgets(input, 255, stdin);
+        parameters->bg_color = strtol(input, NULL, 16);
+
+        /* Iterations */
+        printf("Outfile: \n");
+        parameters->outfile = calloc(255, sizeof(char));
+        fgets(parameters->outfile, 255, stdin);
+
+        /* Iterations */
+        printf("All images ? (0/1) \n");
+        fgets(input, 255, stdin);
+        parameters->all_images = (bool) atoi(input);
+
     }
 }
 
@@ -51,14 +87,14 @@ void show_parameters(const struct parameters *parameters)
             bv = parameters->bg_color>>8,
             bb = parameters->bg_color;
 
-    printf("-----------Parameters-----------\n");
+    printf("\n-----------Parameters-----------\n");
     printf("Segment length: %u\n", parameters->segment_length);
     printf("Image Size: %u\n", parameters->image_size);
     printf("Iterations: %u\n", parameters->nb_iterations);
     printf("Foreground Color: %u(R), %u(V), %u(B)\n", fr, fv, fb);
     printf("Background Color: %u(R), %u(V), %u(B)\n", br, bv, bb);
     printf("All images: %u\n", parameters->all_images);
-    printf("%s\n", parameters->outfile);
+    printf("Outfile: %s\n", parameters->outfile);
     printf("--------------------------------\n");
 }
 
