@@ -8,7 +8,20 @@
 
 void init_parameters(struct parameters *parameters, int argc, char *argv[])
 {
-    // TODO
+    /* Initialisation des paramètres et mode interactif */
+    if (argc >= 6) { /* Tous les paramètres avec ou sans all */
+
+        /* segment_length et calcul image_size */
+        segment_length = atoi(argv[1]);
+        
+
+        if (argc == 7) { /* all_images */
+
+        }
+
+    } else { /* Mode interactif */
+
+    }
 }
 
 void show_koch_list(struct list *koch)
