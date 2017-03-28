@@ -7,6 +7,8 @@
 #ifndef _KOCH_IHM_H_
 #define _KOCH_IHM_H_
 
+#include "koch_fonctions.h"
+
 /* Initialisation des differents parametres de la fractale a partir
    des arguments du programme ou a defaut en mode interactif */
 extern void init_parameters(struct parameters *parameters, int argc, char *argv[]);
